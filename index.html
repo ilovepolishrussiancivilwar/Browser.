@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Advanced Web Redirector</title>
+  <title>Pro Redirector + Games</title>
 
   <!-- Montserrat Light -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
@@ -31,7 +31,7 @@
       backdrop-filter: blur(8px);
       text-align: center;
       width: 90%;
-      max-width: 600px;
+      max-width: 700px;
     }
 
     input[type="text"] {
@@ -45,7 +45,7 @@
     }
 
     button {
-      padding: 12px 20px;
+      padding: 10px 20px;
       font-size: 1em;
       border: none;
       border-radius: 25px;
@@ -76,30 +76,41 @@
       padding: 10px;
       margin: 5px 0;
       border-radius: 10px;
-      word-break: break-all;
+      word-break: break-word;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    a {
+    li a {
       color: #fff;
       text-decoration: underline;
     }
 
-    .bookmark-btn {
+    iframe {
+      width: 100%;
+      height: 400px;
+      border: none;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .small-btn {
+      font-size: 0.8em;
+      padding: 5px 10px;
       margin-left: 10px;
-      background: #ffd700;
-      color: #1f1c2c;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h1>Advanced Redirector</h1>
+    <h1>🚀 Pro Redirector</h1>
     <form id="redirectForm">
       <input type="text" id="urlInput" placeholder="e.g. https://example.com" required>
       <br>
       <button type="submit">Go</button>
-      <button type="button" id="bookmarkBtn" class="bookmark-btn">☆ Bookmark</button>
+      <button type="button" id="bookmarkBtn">☆ Bookmark</button>
     </form>
 
     <div class="section">
@@ -108,8 +119,18 @@
     </div>
 
     <div class="section">
-      <h3>🕘 History</h3>
+      <h3>🕘 History <button id="clearHistory" class="small-btn">Clear All</button></h3>
       <ul id="historyList"></ul>
+    </div>
+
+    <div class="section">
+      <h3>🎮 Games</h3>
+      <p>Click a game to play below:</p>
+      <button onclick="loadGame('2048')">2048</button>
+      <button onclick="loadGame('tetris')">Tetris</button>
+      <button onclick="loadGame('dino')">Dino</button>
+
+      <div id="gameFrameContainer"></div>
     </div>
   </div>
 
@@ -119,36 +140,49 @@
     const historyList = document.getElementById('historyList');
     const bookmarksList = document.getElementById('bookmarksList');
     const bookmarkBtn = document.getElementById('bookmarkBtn');
+    const clearHistoryBtn = document.getElementById('clearHistory');
+    const gameFrameContainer = document.getElementById('gameFrameContainer');
 
-    const saveToStorage = (key, arr) => localStorage.setItem(key, JSON.stringify(arr));
-    const loadFromStorage = key => JSON.parse(localStorage.getItem(key)) || [];
+    const save = (key, arr) => localStorage.setItem(key, JSON.stringify(arr));
+    const load = key => JSON.parse(localStorage.getItem(key)) || [];
 
-    let history = loadFromStorage('urlHistory');
-    let bookmarks = loadFromStorage('urlBookmarks');
+    let history = load('urlHistory');
+    let bookmarks = load('urlBookmarks');
 
-    const updateList = (listEl, items, allowBookmark = false) => {
-      listEl.innerHTML = '';
-      items.forEach(url => {
+    const renderList = () => {
+      // History
+      historyList.innerHTML = '';
+      history.forEach((url, i) => {
+        const li = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.textContent = url;
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = '✕';
+        delBtn.className = 'small-btn';
+        delBtn.onclick = () => {
+          history.splice(i, 1);
+          save('urlHistory', history);
+          renderList();
+        };
+
+        li.appendChild(link);
+        li.appendChild(delBtn);
+        historyList.appendChild(li);
+      });
+
+      // Bookmarks
+      bookmarksList.innerHTML = '';
+      bookmarks.forEach(url => {
         const li = document.createElement('li');
         const link = document.createElement('a');
         link.href = url;
         link.target = '_blank';
         link.textContent = url;
         li.appendChild(link);
-
-        if (allowBookmark && !bookmarks.includes(url)) {
-          const bmBtn = document.createElement('button');
-          bmBtn.textContent = '☆';
-          bmBtn.classList.add('bookmark-btn');
-          bmBtn.onclick = () => {
-            bookmarks.unshift(url);
-            saveToStorage('urlBookmarks', bookmarks);
-            updateList(bookmarksList, bookmarks);
-          };
-          li.appendChild(bmBtn);
-        }
-
-        listEl.appendChild(li);
+        bookmarksList.appendChild(li);
       });
     };
 
@@ -158,13 +192,9 @@
       if (!/^https?:\/\//i.test(url)) {
         url = 'https://' + url;
       }
-
-      // Save to history
       history.unshift(url);
-      saveToStorage('urlHistory', history);
-      updateList(historyList, history, true);
-
-      // Redirect
+      save('urlHistory', history);
+      renderList();
       window.location.href = url;
     });
 
@@ -175,14 +205,28 @@
       }
       if (!bookmarks.includes(url)) {
         bookmarks.unshift(url);
-        saveToStorage('urlBookmarks', bookmarks);
-        updateList(bookmarksList, bookmarks);
+        save('urlBookmarks', bookmarks);
+        renderList();
       }
     });
 
-    // Initial display
-    updateList(historyList, history, true);
-    updateList(bookmarksList, bookmarks);
+    clearHistoryBtn.addEventListener('click', () => {
+      history = [];
+      save('urlHistory', history);
+      renderList();
+    });
+
+    function loadGame(name) {
+      let src = '';
+      if (name === '2048') src = 'https://play2048.co/';
+      if (name === 'tetris') src = 'https://tetris.com/play-tetris';
+      if (name === 'dino') src = 'https://chromedino.com/';
+
+      gameFrameContainer.innerHTML = `<iframe src="${src}" allowfullscreen></iframe>`;
+    }
+
+    // Init
+    renderList();
   </script>
 
 </body>

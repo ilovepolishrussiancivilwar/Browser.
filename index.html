@@ -2,55 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Browser.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Advanced Web Redirector</title>
 
-  <!-- Import Montserrat Light from Google Fonts -->
+  <!-- Montserrat Light -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
 
   <style>
     body {
       margin: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #1f1c2c, #928DAB);
+      padding: 0;
       font-family: 'Montserrat', sans-serif;
       font-weight: 300;
+      background: linear-gradient(135deg, #1f1c2c, #928DAB);
       color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
     }
 
     .container {
-      text-align: center;
+      margin-top: 60px;
       background: rgba(255, 255, 255, 0.05);
-      padding: 40px;
+      padding: 30px;
       border-radius: 20px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
       backdrop-filter: blur(8px);
-    }
-
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 30px;
+      text-align: center;
+      width: 90%;
+      max-width: 600px;
     }
 
     input[type="text"] {
-      width: 90%;
-      max-width: 500px;
+      width: 80%;
       padding: 15px;
       font-size: 1.2em;
       border: none;
       border-radius: 30px;
-      outline: none;
       margin-bottom: 20px;
+      outline: none;
     }
 
     button {
-      padding: 12px 30px;
-      font-size: 1.1em;
+      padding: 12px 20px;
+      font-size: 1em;
       border: none;
       border-radius: 25px;
+      margin: 5px;
       background-color: #ffffff;
       color: #1f1c2c;
       cursor: pointer;
@@ -60,27 +59,131 @@
     button:hover {
       background-color: #ddd;
     }
+
+    .section {
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 10px;
+      word-break: break-all;
+    }
+
+    a {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    .bookmark-btn {
+      margin-left: 10px;
+      background: #ffd700;
+      color: #1f1c2c;
+    }
   </style>
 </head>
 <body>
+
   <div class="container">
-    <h1>Enter a Website URL</h1>
+    <h1>Advanced Redirector</h1>
     <form id="redirectForm">
       <input type="text" id="urlInput" placeholder="e.g. https://example.com" required>
       <br>
       <button type="submit">Go</button>
+      <button type="button" id="bookmarkBtn" class="bookmark-btn">☆ Bookmark</button>
     </form>
+
+    <div class="section">
+      <h3>🔖 Bookmarks</h3>
+      <ul id="bookmarksList"></ul>
+    </div>
+
+    <div class="section">
+      <h3>🕘 History</h3>
+      <ul id="historyList"></ul>
+    </div>
   </div>
 
   <script>
-    document.getElementById('redirectForm').addEventListener('submit', function(e) {
+    const form = document.getElementById('redirectForm');
+    const urlInput = document.getElementById('urlInput');
+    const historyList = document.getElementById('historyList');
+    const bookmarksList = document.getElementById('bookmarksList');
+    const bookmarkBtn = document.getElementById('bookmarkBtn');
+
+    const saveToStorage = (key, arr) => localStorage.setItem(key, JSON.stringify(arr));
+    const loadFromStorage = key => JSON.parse(localStorage.getItem(key)) || [];
+
+    let history = loadFromStorage('urlHistory');
+    let bookmarks = loadFromStorage('urlBookmarks');
+
+    const updateList = (listEl, items, allowBookmark = false) => {
+      listEl.innerHTML = '';
+      items.forEach(url => {
+        const li = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.textContent = url;
+        li.appendChild(link);
+
+        if (allowBookmark && !bookmarks.includes(url)) {
+          const bmBtn = document.createElement('button');
+          bmBtn.textContent = '☆';
+          bmBtn.classList.add('bookmark-btn');
+          bmBtn.onclick = () => {
+            bookmarks.unshift(url);
+            saveToStorage('urlBookmarks', bookmarks);
+            updateList(bookmarksList, bookmarks);
+          };
+          li.appendChild(bmBtn);
+        }
+
+        listEl.appendChild(li);
+      });
+    };
+
+    form.addEventListener('submit', e => {
       e.preventDefault();
-      let url = document.getElementById('urlInput').value.trim();
+      let url = urlInput.value.trim();
       if (!/^https?:\/\//i.test(url)) {
         url = 'https://' + url;
       }
+
+      // Save to history
+      history.unshift(url);
+      saveToStorage('urlHistory', history);
+      updateList(historyList, history, true);
+
+      // Redirect
       window.location.href = url;
     });
+
+    bookmarkBtn.addEventListener('click', () => {
+      let url = urlInput.value.trim();
+      if (!/^https?:\/\//i.test(url)) {
+        url = 'https://' + url;
+      }
+      if (!bookmarks.includes(url)) {
+        bookmarks.unshift(url);
+        saveToStorage('urlBookmarks', bookmarks);
+        updateList(bookmarksList, bookmarks);
+      }
+    });
+
+    // Initial display
+    updateList(historyList, history, true);
+    updateList(bookmarksList, bookmarks);
   </script>
+
 </body>
 </html>

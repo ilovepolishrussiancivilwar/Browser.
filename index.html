@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Browser. (made by nathan :p)</title>
+  <title>Browser.</title>
 
   <!-- Montserrat Light -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
@@ -16,14 +16,25 @@
       font-weight: 300;
       background: linear-gradient(135deg, #1f1c2c, #928DAB);
       color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       min-height: 100vh;
     }
 
+    .counter {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      font-size: 0.9em;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px 12px;
+      border-radius: 12px;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+      user-select: none;
+      display: none;
+    }
+
     .container {
-      margin-top: 60px;
+      margin-top: 80px;
       background: rgba(255, 255, 255, 0.05);
       padding: 30px;
       border-radius: 20px;
@@ -32,6 +43,8 @@
       text-align: center;
       width: 90%;
       max-width: 700px;
+      display: none;
+      animation: fadeIn 1s ease-out;
     }
 
     input[type="text"] {
@@ -42,6 +55,11 @@
       border-radius: 30px;
       margin-bottom: 20px;
       outline: none;
+      transition: box-shadow 0.2s;
+    }
+
+    input[type="text"]:focus {
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
     }
 
     button {
@@ -53,16 +71,18 @@
       background-color: #ffffff;
       color: #1f1c2c;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s, transform 0.2s;
     }
 
     button:hover {
       background-color: #ddd;
+      transform: translateY(-1px);
     }
 
     .section {
       margin-top: 30px;
       text-align: left;
+      animation: fadeIn 0.6s ease-out;
     }
 
     ul {
@@ -80,6 +100,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      transition: background 0.3s;
+    }
+
+    li:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
 
     li a {
@@ -100,12 +125,60 @@
       padding: 5px 10px;
       margin-left: 10px;
     }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Welcome Screen */
+    .welcome-screen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 40px;
+      text-align: center;
+      animation: fadeIn 1s ease-out;
+    }
+
+    .welcome-screen h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    .welcome-screen p {
+      font-size: 1em;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>Browser (fn+shift+delete for mac/ shift+delete for windows to remove suggestions)</h1>
+  <div class="welcome-screen" id="welcomeScreen">
+    <h1>Welcome to my browser.</h1>
+    <p>
+      This web interface allows you to:<br><br>
+      • Access external websites by entering URLs<br>
+      • Save bookmarks for quick access<br>
+      • Track browsing history on your device<br>
+      • Launch mini-games embedded from external sources<br><br>
+      ⚠️ Note: This tool is client-side only. All data is stored in your browser's local storage and not shared externally.<br><br>
+      Use responsibly. Made by Nathan.
+    </p>
+    <button onclick="enterSite()">Continue</button>
+  </div>
+
+  <div class="counter" id="visitCounter">👁️ Visitors: <span id="visitCount">0</span></div>
+
+  <div class="container" id="mainApp">
+    <h1>Browser</h1>
     <form id="redirectForm">
       <input type="text" id="urlInput" placeholder="e.g. https://example.com" required>
       <br>
@@ -135,6 +208,13 @@
   </div>
 
   <script>
+    // Enter site from welcome screen
+    function enterSite() {
+      document.getElementById('welcomeScreen').classList.add('hidden');
+      document.getElementById('mainApp').style.display = 'block';
+      document.getElementById('visitCounter').style.display = 'block';
+    }
+
     const form = document.getElementById('redirectForm');
     const urlInput = document.getElementById('urlInput');
     const historyList = document.getElementById('historyList');
@@ -142,6 +222,7 @@
     const bookmarkBtn = document.getElementById('bookmarkBtn');
     const clearHistoryBtn = document.getElementById('clearHistory');
     const gameFrameContainer = document.getElementById('gameFrameContainer');
+    const visitCount = document.getElementById('visitCount');
 
     const save = (key, arr) => localStorage.setItem(key, JSON.stringify(arr));
     const load = key => JSON.parse(localStorage.getItem(key)) || [];
@@ -149,7 +230,7 @@
     let history = load('urlHistory');
     let bookmarks = load('urlBookmarks');
 
-    const renderList = () => {
+    function renderList() {
       // History
       historyList.innerHTML = '';
       history.forEach((url, i) => {
@@ -184,7 +265,7 @@
         li.appendChild(link);
         bookmarksList.appendChild(li);
       });
-    };
+    }
 
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -221,11 +302,16 @@
       if (name === '2048') src = 'https://play2048.co/';
       if (name === 'tetris') src = 'https://tetris.com/play-tetris';
       if (name === 'dino') src = 'https://chromedino.com/';
-
       gameFrameContainer.innerHTML = `<iframe src="${src}" allowfullscreen></iframe>`;
     }
 
-    // Init
+    // Visitor counter
+    let visits = parseInt(localStorage.getItem('visitCount') || '0', 10);
+    visits++;
+    localStorage.setItem('visitCount', visits);
+    visitCount.textContent = visits;
+
+    // Initialize lists early so it's ready after continue
     renderList();
   </script>
 

@@ -1,109 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#ffffff"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"/>
+  <link rel="icon" type="image/png" href="favicon.png"sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/Browser./favicon.svg" />
+<link rel="shortcut icon" href="/Browser./favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/Browser./apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-title" content="N. Website" />
+<link rel="manifest" href="/Browser./site.webmanifest" />
+
   <title>N. Browser</title>
-  <!-- Link to the Web App Manifest -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#2196F3">
+
   <style>
-    body { font-family: sans-serif; margin: 20px; }
-    h1 { color: #2196F3; }
-    #search { margin-bottom: 20px; }
-    #search input { width: 80%; padding: 8px; }
-    #search button { padding: 8px; }
-    section { margin-top: 20px; }
-    section h2 { margin-bottom: 5px; }
-    ul { list-style: none; padding: 0; }
-    li { margin-bottom: 5px; }
+    :root {
+      --primary: #4285f4;
+      --secondary: #ffffff;
+      --background: #f5f5f5;
+      --shadow: rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    body {
+      background: var(--background);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      background: var(--secondary);
+      box-shadow: 0 2px 4px var(--shadow);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+
+    nav {
+      display: flex;
+      gap: 1rem;
+    }
+
+    nav a {
+      color: #444;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: var(--primary);
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      padding: 2rem;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .card h2 {
+      margin-bottom: 1rem;
+      color: #222;
+    }
+
+    .card p {
+      color: #666;
+      margin-bottom: 2rem;
+    }
+
+    .card button {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .card button:hover {
+      background-color: #3367d6;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.875rem;
+      color: #888;
+    }
   </style>
 </head>
-<body>
-  <h1>Welcome to My Browser App</h1>
 
-  <div id="search">
-    <input type="text" id="search-input" placeholder="Search or enter URL">
-    <button id="search-button">Go</button>
+<body>
+  <header>
+    <h1>MyApp</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Features</a>
+      <a href="#">About</a>
+    </nav>
+  </header>
+
+  <div class="main">
+    <div class="card">
+      <h2>Welcome to My PWA App</h2>
+      <p>This app is installable and ready to use on any device.</p>
+      <button onclick="alert('Action triggered!')">Get Started</button>
+    </div>
   </div>
 
-  <section id="bookmarks">
-    <h2>Bookmarks</h2>
-    <ul>
-      <!-- Example bookmarks -->
-      <li><a href="https://example.com">Example Site</a></li>
-      <li><a href="https://developer.mozilla.org">MDN Web Docs</a></li>
-      <li><a href="https://wikipedia.org">Wikipedia</a></li>
-    </ul>
-  </section>
-
-  <section id="history">
-    <h2>History</h2>
-    <ul id="history-list">
-      <!-- Browsing history will appear here -->
-    </ul>
-  </section>
-
-  <section id="games">
-    <h2>Games</h2>
-    <ul>
-      <li><a href="https://www.google.com/fbx?fbx=snake_arcade">Snake</a></li>
-      <li><a href="https://play2048.co/">2048</a></li>
-      <li><a href="https://tetris.com/play-tetris">Tetris</a></li>
-    </ul>
-  </section>
+  <footer>
+    &copy; 2025 MyApp. All rights reserved.
+  </footer>
 
   <script>
-    // Handle search button click or Enter key
-    function doSearch() {
-      const input = document.getElementById('search-input');
-      let query = input.value.trim();
-      if (!query) return;
-      // If query looks like a URL, go directly; else search Google
-      if (!query.startsWith('http://') && !query.startsWith('https://')) {
-        const url = 'https://www.google.com/search?q=' + encodeURIComponent(query);
-        window.open(url, '_blank');
-        addHistory(query, url);
-      } else {
-        window.open(query, '_blank');
-        addHistory(query, query);
-      }
-      input.value = '';
-    }
-    document.getElementById('search-button').onclick = doSearch;
-    document.getElementById('search-input').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') doSearch();
-    });
-
-    // Simple history: store and display last 10 searches/URLs
-    function addHistory(text, url) {
-      let history = JSON.parse(localStorage.getItem('browserHistory') || "[]");
-      history.unshift({ text: text, url: url });
-      history = history.slice(0, 10); // keep max 10 items
-      localStorage.setItem('browserHistory', JSON.stringify(history));
-      renderHistory();
-    }
-    function renderHistory() {
-      const list = document.getElementById('history-list');
-      list.innerHTML = '';
-      const history = JSON.parse(localStorage.getItem('browserHistory') || "[]");
-      history.forEach(item => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = item.url;
-        a.textContent = item.text;
-        a.target = '_blank';
-        li.appendChild(a);
-        list.appendChild(li);
-      });
-    }
-    // Render history on load
-    renderHistory();
-
-    // Register service worker if available
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js')
-        .then(reg => console.log('Service worker registered.'))
+        .then(() => console.log('Service Worker registered'))
         .catch(err => console.error('SW registration failed:', err));
     }
   </script>

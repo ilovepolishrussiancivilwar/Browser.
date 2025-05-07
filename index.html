@@ -1,319 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Browser.</title>
-
-  <!-- Montserrat Light -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>N. Browser</title>
+  <!-- Link to the Web App Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2196F3">
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 300;
-      background: linear-gradient(135deg, #1f1c2c, #928DAB);
-      color: white;
-      min-height: 100vh;
-    }
-
-    .counter {
-      position: fixed;
-      top: 10px;
-      right: 20px;
-      font-size: 0.9em;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 6px 12px;
-      border-radius: 12px;
-      backdrop-filter: blur(5px);
-      box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
-      user-select: none;
-      display: none;
-    }
-
-    .container {
-      margin-top: 80px;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(8px);
-      text-align: center;
-      width: 90%;
-      max-width: 700px;
-      display: none;
-      animation: fadeIn 1s ease-out;
-    }
-
-    input[type="text"] {
-      width: 80%;
-      padding: 15px;
-      font-size: 1.2em;
-      border: none;
-      border-radius: 30px;
-      margin-bottom: 20px;
-      outline: none;
-      transition: box-shadow 0.2s;
-    }
-
-    input[type="text"]:focus {
-      box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
-    }
-
-    button {
-      padding: 10px 20px;
-      font-size: 1em;
-      border: none;
-      border-radius: 25px;
-      margin: 5px;
-      background-color: #ffffff;
-      color: #1f1c2c;
-      cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
-    }
-
-    button:hover {
-      background-color: #ddd;
-      transform: translateY(-1px);
-    }
-
-    .section {
-      margin-top: 30px;
-      text-align: left;
-      animation: fadeIn 0.6s ease-out;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    li {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 10px;
-      margin: 5px 0;
-      border-radius: 10px;
-      word-break: break-word;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: background 0.3s;
-    }
-
-    li:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    li a {
-      color: #fff;
-      text-decoration: underline;
-    }
-
-    iframe {
-      width: 100%;
-      height: 400px;
-      border: none;
-      border-radius: 10px;
-      margin-top: 10px;
-    }
-
-    .small-btn {
-      font-size: 0.8em;
-      padding: 5px 10px;
-      margin-left: 10px;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Welcome Screen */
-    .welcome-screen {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      padding: 40px;
-      text-align: center;
-      animation: fadeIn 1s ease-out;
-    }
-
-    .welcome-screen h1 {
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-
-    .welcome-screen p {
-      font-size: 1em;
-      max-width: 600px;
-      line-height: 1.6;
-    }
-
-    .hidden {
-      display: none;
-    }
+    body { font-family: sans-serif; margin: 20px; }
+    h1 { color: #2196F3; }
+    #search { margin-bottom: 20px; }
+    #search input { width: 80%; padding: 8px; }
+    #search button { padding: 8px; }
+    section { margin-top: 20px; }
+    section h2 { margin-bottom: 5px; }
+    ul { list-style: none; padding: 0; }
+    li { margin-bottom: 5px; }
   </style>
 </head>
 <body>
+  <h1>Welcome to My Browser App</h1>
 
-  <div class="welcome-screen" id="welcomeScreen">
-    <h1>Welcome to my browser.</h1>
-    <p>
-      This web interface allows you to:<br><br>
-      • Access external websites by entering URLs<br>
-      • Save bookmarks for quick access<br>
-      • Track browsing history on your device<br>
-      • Launch mini-games embedded from external sources<br><br>
-      ⚠️ Note: This tool is client-side only. All data is stored in your browser's local storage and not shared externally.<br><br>
-      Use responsibly. Made by Nathan.
-    </p>
-    <button onclick="enterSite()">Continue</button>
+  <div id="search">
+    <input type="text" id="search-input" placeholder="Search or enter URL">
+    <button id="search-button">Go</button>
   </div>
 
-  <div class="counter" id="visitCounter">👁️ Visitors: <span id="visitCount">0</span></div>
+  <section id="bookmarks">
+    <h2>Bookmarks</h2>
+    <ul>
+      <!-- Example bookmarks -->
+      <li><a href="https://example.com">Example Site</a></li>
+      <li><a href="https://developer.mozilla.org">MDN Web Docs</a></li>
+      <li><a href="https://wikipedia.org">Wikipedia</a></li>
+    </ul>
+  </section>
 
-  <div class="container" id="mainApp">
-    <h1>Browser</h1>
-    <form id="redirectForm">
-      <input type="text" id="urlInput" placeholder="e.g. https://example.com" required>
-      <br>
-      <button type="submit">Go</button>
-      <button type="button" id="bookmarkBtn">☆ Bookmark</button>
-    </form>
+  <section id="history">
+    <h2>History</h2>
+    <ul id="history-list">
+      <!-- Browsing history will appear here -->
+    </ul>
+  </section>
 
-    <div class="section">
-      <h3>Bookmarks</h3>
-      <ul id="bookmarksList"></ul>
-    </div>
-
-    <div class="section">
-      <h3>History <button id="clearHistory" class="small-btn">Clear All</button></h3>
-      <ul id="historyList"></ul>
-    </div>
-
-    <div class="section">
-      <h3>Games</h3>
-      <p>Click a game to play below:</p>
-      <button onclick="loadGame('2048')">2048</button>
-      <button onclick="loadGame('tetris')">Tetris</button>
-      <button onclick="loadGame('dino')">Dino</button>
-
-      <div id="gameFrameContainer"></div>
-    </div>
-  </div>
+  <section id="games">
+    <h2>Games</h2>
+    <ul>
+      <li><a href="https://www.google.com/fbx?fbx=snake_arcade">Snake</a></li>
+      <li><a href="https://play2048.co/">2048</a></li>
+      <li><a href="https://tetris.com/play-tetris">Tetris</a></li>
+    </ul>
+  </section>
 
   <script>
-    // Enter site from welcome screen
-    function enterSite() {
-      document.getElementById('welcomeScreen').classList.add('hidden');
-      document.getElementById('mainApp').style.display = 'block';
-      document.getElementById('visitCounter').style.display = 'block';
+    // Handle search button click or Enter key
+    function doSearch() {
+      const input = document.getElementById('search-input');
+      let query = input.value.trim();
+      if (!query) return;
+      // If query looks like a URL, go directly; else search Google
+      if (!query.startsWith('http://') && !query.startsWith('https://')) {
+        const url = 'https://www.google.com/search?q=' + encodeURIComponent(query);
+        window.open(url, '_blank');
+        addHistory(query, url);
+      } else {
+        window.open(query, '_blank');
+        addHistory(query, query);
+      }
+      input.value = '';
     }
+    document.getElementById('search-button').onclick = doSearch;
+    document.getElementById('search-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') doSearch();
+    });
 
-    const form = document.getElementById('redirectForm');
-    const urlInput = document.getElementById('urlInput');
-    const historyList = document.getElementById('historyList');
-    const bookmarksList = document.getElementById('bookmarksList');
-    const bookmarkBtn = document.getElementById('bookmarkBtn');
-    const clearHistoryBtn = document.getElementById('clearHistory');
-    const gameFrameContainer = document.getElementById('gameFrameContainer');
-    const visitCount = document.getElementById('visitCount');
-
-    const save = (key, arr) => localStorage.setItem(key, JSON.stringify(arr));
-    const load = key => JSON.parse(localStorage.getItem(key)) || [];
-
-    let history = load('urlHistory');
-    let bookmarks = load('urlBookmarks');
-
-    function renderList() {
-      // History
-      historyList.innerHTML = '';
-      history.forEach((url, i) => {
+    // Simple history: store and display last 10 searches/URLs
+    function addHistory(text, url) {
+      let history = JSON.parse(localStorage.getItem('browserHistory') || "[]");
+      history.unshift({ text: text, url: url });
+      history = history.slice(0, 10); // keep max 10 items
+      localStorage.setItem('browserHistory', JSON.stringify(history));
+      renderHistory();
+    }
+    function renderHistory() {
+      const list = document.getElementById('history-list');
+      list.innerHTML = '';
+      const history = JSON.parse(localStorage.getItem('browserHistory') || "[]");
+      history.forEach(item => {
         const li = document.createElement('li');
-        const link = document.createElement('a');
-        link.href = url;
-        link.target = '_blank';
-        link.textContent = url;
-
-        const delBtn = document.createElement('button');
-        delBtn.textContent = '✕';
-        delBtn.className = 'small-btn';
-        delBtn.onclick = () => {
-          history.splice(i, 1);
-          save('urlHistory', history);
-          renderList();
-        };
-
-        li.appendChild(link);
-        li.appendChild(delBtn);
-        historyList.appendChild(li);
-      });
-
-      // Bookmarks
-      bookmarksList.innerHTML = '';
-      bookmarks.forEach(url => {
-        const li = document.createElement('li');
-        const link = document.createElement('a');
-        link.href = url;
-        link.target = '_blank';
-        link.textContent = url;
-        li.appendChild(link);
-        bookmarksList.appendChild(li);
+        const a = document.createElement('a');
+        a.href = item.url;
+        a.textContent = item.text;
+        a.target = '_blank';
+        li.appendChild(a);
+        list.appendChild(li);
       });
     }
+    // Render history on load
+    renderHistory();
 
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      let url = urlInput.value.trim();
-      if (!/^https?:\/\//i.test(url)) {
-        url = 'https://' + url;
-      }
-      history.unshift(url);
-      save('urlHistory', history);
-      renderList();
-      window.location.href = url;
-    });
-
-    bookmarkBtn.addEventListener('click', () => {
-      let url = urlInput.value.trim();
-      if (!/^https?:\/\//i.test(url)) {
-        url = 'https://' + url;
-      }
-      if (!bookmarks.includes(url)) {
-        bookmarks.unshift(url);
-        save('urlBookmarks', bookmarks);
-        renderList();
-      }
-    });
-
-    clearHistoryBtn.addEventListener('click', () => {
-      history = [];
-      save('urlHistory', history);
-      renderList();
-    });
-
-    function loadGame(name) {
-      let src = '';
-      if (name === '2048') src = 'https://play2048.co/';
-      if (name === 'tetris') src = 'https://tetris.com/play-tetris';
-      if (name === 'dino') src = 'https://chromedino.com/';
-      gameFrameContainer.innerHTML = `<iframe src="${src}" allowfullscreen></iframe>`;
+    // Register service worker if available
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(reg => console.log('Service worker registered.'))
+        .catch(err => console.error('SW registration failed:', err));
     }
-
-    // Visitor counter
-    let visits = parseInt(localStorage.getItem('visitCount') || '0', 10);
-    visits++;
-    localStorage.setItem('visitCount', visits);
-    visitCount.textContent = visits;
-
-    // Initialize lists early so it's ready after continue
-    renderList();
   </script>
-
 </body>
 </html>

@@ -1,11 +1,10 @@
 {
-  "name": "Redirector Web Portal",
-  "short_name": "Redirector",
-  "start_url": "./",
+  "name": "N. Browser",
+  "short_name": "BrowserApp",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#1f1c2c",
-  "theme_color": "#928DAB",
-  "description": "A redirector browser with bookmarks, history, and games.",
+  "background_color": "#ffffff",
+  "theme_color": "#2196F3",
   "icons": [
     {
       "src": "icon-192.png",
